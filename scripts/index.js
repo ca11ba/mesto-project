@@ -3,10 +3,10 @@ const cardPopup = document.querySelector('.popup_type_new-card');
 const imagePopup = document.querySelector('.popup_type_image');
 const redactUser = document.querySelector('.profile__edit-button');
 const addCard = document.querySelector('.profile__add-button');
-const profileFormElement = document.querySelector('[name="edit-profile"]');// Воспользуйтесь методом querySelector()// Находим поля формы в DOM
+const profileFormElement = document.querySelector('[name="edit-profile"]');
 const cardFormElement = document.querySelector('[name="new-place"]');
-const nameInput = document.querySelector('.popup__input_type_name'); // Воспользуйтесь инструментом .querySelector()
-const jobInput = document.querySelector('.popup__input_type_description');// Воспользуйтесь инструментом .querySelector()
+const nameInput = document.querySelector('.popup__input_type_name');
+const jobInput = document.querySelector('.popup__input_type_description');
 const closeButtons = document.querySelectorAll('.popup__close');
 const places = document.querySelector('.places__list');
 const cardLinkPopup = document.querySelector('.popup__image');
@@ -58,9 +58,9 @@ function addNewCard(){
 }
 
 function deleteCard(evt) {
-    const card = evt.target.closest('.places__item'); // Находим карточку, родительскую по отношению к кнопке удаления
+    const card = evt.target.closest('.places__item');
     if (card) {
-        card.remove(); // Удаляем карточку
+        card.remove();
     }
 }
 
@@ -86,17 +86,12 @@ closeButtons.forEach(button => {
 
 
 function handleCardFormSubmit(evt) {
-    evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-    // Так мы можем определить свою логику отправки.
-    // О том, как это делать, расскажем позже.
-    // Получите значение полей jobInput и nameInput из свойства valu
-    // Выберите элементы, куда должны быть вставлены значения полей
+    evt.preventDefault();
     let cardName = document.querySelector('.popup__input_type_card-name');
     let cardLink = document.querySelector('.popup__input_type_url');
 
     let cardNameValue = cardName.value;
     let cardLinkValue = cardLink.value;
-    // Вставьте новые значения с помощью textContent
     initialCards.unshift({
         name: cardNameValue,
         link: cardLinkValue
@@ -111,22 +106,16 @@ function handleCardFormSubmit(evt) {
 
 
 
-// Находим форму в DOM
-// Обработчик «отправки» формы, хотя пока
-// она никуда отправляться не будет
-function handleProfileFormSubmit(evt) {
-    evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-        // Так мы можем определить свою логику отправки.
-        // О том, как это делать, расскажем позже.
 
-        // Получите значение полей jobInput и nameInput из свойства value
+function handleProfileFormSubmit(evt) {
+    evt.preventDefault();
+
     let jobValue = jobInput.value;
     let nameValue = nameInput.value;
 
-        // Выберите элементы, куда должны быть вставлены значения полей
     let userName = document.querySelector('.profile__title');
     let userInfo = document.querySelector('.profile__description');
-        // Вставьте новые значения с помощью textContent
+
     userName.textContent = nameValue;
     userInfo.textContent = jobValue;
     closeModal(profilePopup);
@@ -136,8 +125,7 @@ function handleProfileFormSubmit(evt) {
 
 
 
-// Прикрепляем обработчик к форме:
-// он будет следить за событием “submit” - «отправка»
+
 
 function redactUserInfo(){
 
@@ -152,21 +140,40 @@ function redactUserInfo(){
 
 function openModal(popup){
     popup.classList.add('popup_is-opened');
-
+    document.addEventListener('keydown', closeByEsc);
 }
 
 function closeModal(popup){
     popup.classList.remove('popup_is-opened');
-
+    document.addEventListener('keydown', closeByEsc);
 }
 
 
-// @todo: Темплейт карточки
 
-// @todo: DOM узлы
 
-// @todo: Функция создания карточки
+enableValidation(validationSettings);
 
-// @todo: Функция удаления карточки
 
-// @todo: Вывести карточки на страницу
+function closeByEsc(evt) {
+    if (evt.key === 'Escape') {
+        const openedPopup = document.querySelector('.popup_is-opened');
+        closeModal(openedPopup);
+    }
+}
+
+function closeWithClickOnOverlay() {
+    const popupList = document.querySelectorAll('.popup');
+    popupList.forEach((popup) => {
+        popup.addEventListener('click', (el) => {
+            if (el.target === popup) {
+                closeModal(popup);
+            }
+        });
+    });
+}
+
+closeWithClickOnOverlay();
+
+
+
+
