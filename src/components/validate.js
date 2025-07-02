@@ -1,12 +1,3 @@
-const validationSettings = {
-    formSelector: '.popup__form',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__button',
-    inactiveButtonClass: 'popup__button_disabled',
-    inputErrorClass: 'popup__input_type_error',
-    errorClass: 'popup__error_visible'
-}
-
 const showInputError = (formElement, inputElement, errorMessage, settings) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     inputElement.classList.add(settings.inputErrorClass);
@@ -69,4 +60,6 @@ const toggleButtonState = (inputList, buttonElement, settings) => {
         buttonElement.disabled = false;
     }
 }
+
+export {enableValidation};
 
