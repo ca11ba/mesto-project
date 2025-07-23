@@ -1,10 +1,8 @@
 import '../pages/index.css';
 import { enableValidation } from './validate.js';
-import { initialCards, createCard} from './cards.js';
+import {createCard} from './cards.js';
 import { openModal, closeModal, closeWithClickOnOverlay} from './modal.js';
-
-
-
+import {showCardsFromServer, showUserInfoFromServer, redactUserInfoFromServer, addNewCardToServer} from "./api";
 
 
 const profilePopup = document.querySelector('.popup_type_edit');
@@ -21,15 +19,18 @@ const places = document.querySelector('.places__list');
 const cardLinkPopup = document.querySelector('.popup__image');
 const cardNamePopup = document.querySelector('.popup__caption');
 
+const cardsFromServer = showCardsFromServer();
+cardsFromServer.then((cards) => {
+    cards.forEach(item => {
+        const card = createCard(item, imagePopup, cardLinkPopup, cardNamePopup);
+        places.append(card);
+    });
+});
+
+
 profilePopup.classList.toggle('popup_is-animated');
 cardPopup.classList.toggle('popup_is-animated');
 imagePopup.classList.toggle('popup_is-animated');
-
-
-initialCards.forEach(item => {
-    const card = createCard(item, imagePopup, cardLinkPopup, cardNamePopup);
-    places.append(card);
-});
 
 redactUser.addEventListener('click',redactUserInfo);
 
@@ -50,15 +51,15 @@ closeButtons.forEach(button => {
 
 function handleCardFormSubmit(evt) {
     evt.preventDefault();
+
     let cardName = document.querySelector('.popup__input_type_card-name');
     let cardLink = document.querySelector('.popup__input_type_url');
 
     let cardNameValue = cardName.value;
     let cardLinkValue = cardLink.value;
-    initialCards.unshift({
-        name: cardNameValue,
-        link: cardLinkValue
-    });
+
+    addNewCardToServer(cardNameValue, cardLinkValue);
+
     const newCard = createCard({ name: cardNameValue, link: cardLinkValue }, imagePopup, cardLinkPopup, cardNamePopup);
     places.prepend(newCard);
     closeModal(cardPopup);
@@ -67,7 +68,17 @@ function handleCardFormSubmit(evt) {
 }
 
 
+function showProfileInfoFromServer() {
+    let userInfo = showUserInfoFromServer();
+    userInfo.then((data) => {
+        let userName = document.querySelector('.profile__title');
+        let userDescription = document.querySelector('.profile__description');
+        userName.textContent = data.name;
+        userDescription.textContent = data.about;
+    })
+}
 
+showProfileInfoFromServer();
 
 
 function handleProfileFormSubmit(evt) {
@@ -78,7 +89,7 @@ function handleProfileFormSubmit(evt) {
 
     let userName = document.querySelector('.profile__title');
     let userInfo = document.querySelector('.profile__description');
-
+    let redactUser = redactUserInfoFromServer(nameValue, jobValue);
     userName.textContent = nameValue;
     userInfo.textContent = jobValue;
     closeModal(profilePopup);
@@ -96,7 +107,6 @@ function addNewCard(){
 
 
 function redactUserInfo(){
-
     let userName = document.querySelector('.profile__title').textContent;
     let userInfo = document.querySelector('.profile__description').textContent;
     nameInput.value = userName;
