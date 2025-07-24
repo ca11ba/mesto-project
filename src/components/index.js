@@ -2,7 +2,7 @@ import '../pages/index.css';
 import { enableValidation } from './validate.js';
 import {createCard} from './cards.js';
 import { openModal, closeModal, closeWithClickOnOverlay} from './modal.js';
-import {showCardsFromServer, showUserInfoFromServer, redactUserInfoFromServer, addNewCardToServer} from "./api";
+import {showCardsFromServer, showUserInfoFromServer, redactUserInfoFromServer, addNewCardToServer, editProfileAvatar} from "./api";
 
 
 const profilePopup = document.querySelector('.popup_type_edit');
@@ -18,6 +18,8 @@ const closeButtons = document.querySelectorAll('.popup__close');
 const places = document.querySelector('.places__list');
 const cardLinkPopup = document.querySelector('.popup__image');
 const cardNamePopup = document.querySelector('.popup__caption');
+const profileAvatar = document.querySelector('.profile__image');
+
 
 const cardsFromServer = showCardsFromServer();
 cardsFromServer.then((cards) => {
@@ -58,10 +60,16 @@ function handleCardFormSubmit(evt) {
     let cardNameValue = cardName.value;
     let cardLinkValue = cardLink.value;
 
-    addNewCardToServer(cardNameValue, cardLinkValue);
+    addNewCardToServer(cardNameValue, cardLinkValue)
+        .then((serverCard) => {
+            const cardElement = createCard(serverCard, imagePopup, cardLinkPopup, cardNamePopup);
+            places.prepend(cardElement);
+            closeModal(cardPopup);
+        })
+        .catch((err) => {
+            console.error("Ошибка при создании карточки:", err);
+        });
 
-    const newCard = createCard({ name: cardNameValue, link: cardLinkValue }, imagePopup, cardLinkPopup, cardNamePopup);
-    places.prepend(newCard);
     closeModal(cardPopup);
 
 
@@ -112,6 +120,10 @@ function redactUserInfo(){
     nameInput.value = userName;
     jobInput.value = userInfo;
     openModal(profilePopup);
+
+}
+
+function editUserAvatar() {
 
 }
 
