@@ -1,29 +1,62 @@
-function showCardsFromServer() {
-    return fetch('https://nomoreparties.co/v1/apf-cohort-202/cards', {
+const config = {
+    baseUrl: 'https://nomoreparties.co/v1/apf-cohort-202',
+    headers: {
+        authorization: '8599dc1b-69d9-4516-9da4-cb9c30e5f5cf',
+        'Content-Type': 'application/json'
+    }
+}
+
+
+export const getInitialCards = () => {
+    return fetch(`${config.baseUrl}/cards`, {
         method: 'GET',
         headers: {
-            authorization: '8599dc1b-69d9-4516-9da4-cb9c30e5f5cf'
+            authorization: config.headers.authorization
         }
     })
-        .then(res => res.json())
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
 
+
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
 }
 
-function showUserInfoFromServer() {
-    return fetch('https://nomoreparties.co/v1/apf-cohort-202/users/me', {
+
+
+
+export const getUserInfo = () => {
+    return fetch(`${config.baseUrl}/users/me`, {
         method: "GET",
         headers: {
-            authorization: '8599dc1b-69d9-4516-9da4-cb9c30e5f5cf'
+            authorization: config.headers.authorization
         },
     })
-        .then(res => res.json());
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+
+
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
 }
 
-function redactUserInfoFromServer(username, about) {
-    return fetch('https://nomoreparties.co/v1/apf-cohort-202/users/me', {
+
+
+export const redactUserInfoServer = (username, about) => {
+    return fetch(`${config.baseUrl}/users/me`, {
         method: "PATCH",
         headers: {
-            authorization: '8599dc1b-69d9-4516-9da4-cb9c30e5f5cf',
+            authorization: config.headers.authorization,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -31,98 +64,123 @@ function redactUserInfoFromServer(username, about) {
             about: about
         })
     })
-        .then(res => res.json())
-        .then(res => console.log(res));
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+
+
+            return Promise.reject(`Ошибка: ${res.status}`);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 }
 
-function addNewCardToServer(name, link) {
-    return fetch('https://nomoreparties.co/v1/apf-cohort-202/cards', {
+
+export const addNewCardServer = (name, link) => {
+    return fetch(`${config.baseUrl}/cards`, {
         method: 'POST',
         headers: {
-            authorization: '8599dc1b-69d9-4516-9da4-cb9c30e5f5cf',
+            authorization: config.headers.authorization,
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             name: name,
             link: link
         })
     })
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error(`Ошибка: ${res.status}`);
+        .then(res => {
+            if (res.ok) {
+                return res.json();
             }
-            return res.json(); // ← это критически важно!
-        })
-        .catch((err) => {
-            console.error("Ошибка в addNewCardToServer:", err);
-            throw err; // пробрасываем дальше
+            return Promise.reject(new Error(`Ошибка: ${res.status}`));
+        }).catch((err) => {
+            console.log(err); // выводим ошибку в консоль
         });
 }
 
-function deleteCardFromServer(cardId) {
-    return fetch(`https://nomoreparties.co/v1/apf-cohort-202/cards/${cardId}`, {
-        method: "DELETE",
-        headers: {
-            authorization: '8599dc1b-69d9-4516-9da4-cb9c30e5f5cf',
-            'Content-Type': 'application/json'
-        },
-    })
-        .then(res => res.json())
-        .then(res => console.log(res));
-}
 
-function putLikesToCard(cardId) {
-    return fetch(`https://nomoreparties.co/v1/apf-cohort-202/cards/likes/${cardId}`, {
-        method: "PUT",
+
+export const deleteCardServer = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/${cardId}`, {
+        method: 'DELETE',
         headers: {
-            authorization: '8599dc1b-69d9-4516-9da4-cb9c30e5f5cf',
+            authorization: config.headers.authorization,
             'Content-Type': 'application/json'
-        },
+        }
     })
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error(`Ошибка: ${res.status}`);
+        .then(res => {
+            if (res.ok) {
+                return res.json();
             }
-            return res.json();
-        })
+            return Promise.reject(new Error(`Ошибка: ${res.status}`));
+        }).catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
 }
 
 
-function removeLikesFromCard(cardId) {
-    return fetch(`https://nomoreparties.co/v1/apf-cohort-202/cards/likes/${cardId}`, {
-        method: "DELETE",
+
+export const putLikes = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        method: 'PUT',
         headers: {
-            authorization: '8599dc1b-69d9-4516-9da4-cb9c30e5f5cf',
+            authorization: config.headers.authorization,
             'Content-Type': 'application/json'
-        },
+        }
     })
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error(`Ошибка: ${res.status}`);
+        .then(res => {
+            if (res.ok) {
+                return res.json();
             }
-            return res.json();
-        })
+            return Promise.reject(new Error(`Ошибка: ${res.status}`));
+        }).catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
 }
 
-function editProfileAvatar(avatarUrl) {
-    return fetch(`https://nomoreparties.co/v1/apf-cohort-202/users/me/${avatarUrl}`, {
+
+export const removeLikes = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        method: 'DELETE',
+        headers: {
+            authorization: config.headers.authorization,
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(new Error(`Ошибка: ${res.status}`));
+        }).catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
+}
+
+
+
+export const editProfileAvatarServer = (avatarUrl) => {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
         method: "PATCH",
         headers: {
-            authorization: '8599dc1b-69d9-4516-9da4-cb9c30e5f5cf',
+            authorization: config.headers.authorization,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             avatar: avatarUrl
         })
     })
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error(`Ошибка: ${res.status}`);
+        .then(res => {
+            if (res.ok) {
+                return res.json();
             }
-            return res.json();
+
+
+            return Promise.reject(`Ошибка: ${res.status}`);
         })
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
 }
-
-
-
-
-export {showCardsFromServer, showUserInfoFromServer, redactUserInfoFromServer, addNewCardToServer, deleteCardFromServer, putLikesToCard, removeLikesFromCard, editProfileAvatar};
