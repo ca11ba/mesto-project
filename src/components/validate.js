@@ -61,5 +61,18 @@ const toggleButtonState = (inputList, buttonElement, settings) => {
     }
 }
 
-export {enableValidation};
+
+const resetValidation = (formElement, settings) => {
+    const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector));
+    const buttonElement = formElement.querySelector(settings.submitButtonSelector);
+
+    inputList.forEach((inputElement) => {
+        hideInputError(formElement, inputElement, settings); // использовать уже существующую функцию
+    });
+
+    toggleButtonState(inputList, buttonElement, settings); // обновить кнопку
+};
+
+
+export {enableValidation, resetValidation};
 
