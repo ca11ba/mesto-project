@@ -1,15 +1,17 @@
 import {openModal} from "./modal";
 import {deleteCardServer, putLikes, removeLikes} from "./api";
 
-function createCard(card, imagePopup, cardLinkPopup, cardNamePopup) {
+function createCard(card, imagePopup, cardLinkPopup, cardNamePopup, currentUserId) {
     let cardTemplate = document.querySelector('#card-template').content;
     let cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
     let cardLikesCount = cardElement.querySelector('.card__likes-count');
     const likeButton = cardElement.querySelector('.card__like-button');
     cardElement.querySelector('.card__title').textContent = card.name;
     cardElement.querySelector('.card__image').src = card.link;
-
     cardLikesCount.textContent = (card.likes || []).length;
+    if (card.likes.find(user => (user._id === currentUserId))) {
+        likeButton.classList.add('card__like-button_is-active');
+    }
 
     likeButton.addEventListener('click', () => {
         if (likeButton.classList.contains('card__like-button_is-active')) {
@@ -35,7 +37,7 @@ function createCard(card, imagePopup, cardLinkPopup, cardNamePopup) {
     deleteButton.addEventListener('click', function () {
         deleteCard(cardElement, card._id);
     });
-    if (card.owner && card.owner._id != 'c807039948f821b33b1164e5'){
+    if (card.owner && card.owner._id != currentUserId) {
         deleteButton.remove()
     }
 

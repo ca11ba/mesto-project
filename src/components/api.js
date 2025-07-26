@@ -10,9 +10,7 @@ const config = {
 export const getInitialCards = () => {
     return fetch(`${config.baseUrl}/cards`, {
         method: 'GET',
-        headers: {
-            authorization: config.headers.authorization
-        }
+        headers: config.headers
     })
         .then(res => {
             if (res.ok) {
@@ -33,9 +31,7 @@ export const getInitialCards = () => {
 export const getUserInfo = () => {
     return fetch(`${config.baseUrl}/users/me`, {
         method: "GET",
-        headers: {
-            authorization: config.headers.authorization
-        },
+        headers: config.headers,
     })
         .then(res => {
             if (res.ok) {
@@ -55,10 +51,7 @@ export const getUserInfo = () => {
 export const redactUserInfoServer = (username, about) => {
     return fetch(`${config.baseUrl}/users/me`, {
         method: "PATCH",
-        headers: {
-            authorization: config.headers.authorization,
-            'Content-Type': 'application/json'
-        },
+        headers: config.headers,
         body: JSON.stringify({
             name: username,
             about: about
@@ -81,10 +74,7 @@ export const redactUserInfoServer = (username, about) => {
 export const addNewCardServer = (name, link) => {
     return fetch(`${config.baseUrl}/cards`, {
         method: 'POST',
-        headers: {
-            authorization: config.headers.authorization,
-            'Content-Type': 'application/json'
-        },
+        headers: config.headers,
         body: JSON.stringify({
             name: name,
             link: link
@@ -105,10 +95,7 @@ export const addNewCardServer = (name, link) => {
 export const deleteCardServer = (cardId) => {
     return fetch(`${config.baseUrl}/cards/${cardId}`, {
         method: 'DELETE',
-        headers: {
-            authorization: config.headers.authorization,
-            'Content-Type': 'application/json'
-        }
+        headers: config.headers
     })
         .then(res => {
             if (res.ok) {
@@ -125,10 +112,7 @@ export const deleteCardServer = (cardId) => {
 export const putLikes = (cardId) => {
     return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
         method: 'PUT',
-        headers: {
-            authorization: config.headers.authorization,
-            'Content-Type': 'application/json'
-        }
+        headers: config.headers
     })
         .then(res => {
             if (res.ok) {
@@ -144,10 +128,7 @@ export const putLikes = (cardId) => {
 export const removeLikes = (cardId) => {
     return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
         method: 'DELETE',
-        headers: {
-            authorization: config.headers.authorization,
-            'Content-Type': 'application/json'
-        }
+        headers: config.headers
     })
         .then(res => {
             if (res.ok) {
@@ -164,10 +145,7 @@ export const removeLikes = (cardId) => {
 export const editProfileAvatarServer = (avatarUrl) => {
     return fetch(`${config.baseUrl}/users/me/avatar`, {
         method: "PATCH",
-        headers: {
-            authorization: config.headers.authorization,
-            'Content-Type': 'application/json'
-        },
+        headers: config.headers,
         body: JSON.stringify({
             avatar: avatarUrl
         })
